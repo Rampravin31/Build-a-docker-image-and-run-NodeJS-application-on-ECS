@@ -1,0 +1,27 @@
+Instructions:
+Pre-requisites:
+Create 2 Security groups, one for allowing HTTP traffic from anywhere to the Application Load balancer, 2nd SG for the ECS cluster to allow traffic from SG of ALB
+Create an Application Load Balancer and add the Security group created before.
+
+
+1. Create an EC2 instance to build the docker image.  
+2. Clone the git hub link to download the docker file and code to your EC2 instance.
+3. Now go to ECR service, create a repository mywebapp, use the commands recommended to build the dockerfile as docker image, tag it and push to repo mywebapp using the same commands.
+
+Cluster creation:
+4. Now create a cluster, use the template EC2 Linux + Networking
+5. Give a name to cluster, for instance, configuration select the On-demand or spot instance, EC2 instance type select accordingly (t2.micro - free), number of instance, EC2 AMI image, EBS volume, and key pair.
+6. For Networking, select the VPC and subnets, and enable the auto assign IP.
+7. Select the SG created for the ECS cluster before.
+
+Task Definition:
+8. Select which launch type you want your task definition to be compatible with based on where you want to launch your task, either EC2 or Fargate type accordingly.
+9. Provide a task definition name, task execution role, task size[used for fargate launch type, optional for EC2] as 100 MiB, task CPU as 1 vCPU or 2vCPU accordingly.
+10. Add the container, container name, container image URL, host and container port as 3000.
+
+Service Creation:
+11. Select the Launch type [EC2/Fargate], task definition, cluster, add service name[mywebserice], number of tasks [2 tasks], the minimum healthy percent is 2, maximum 200.
+12. Next select the Application Load Balancer, choose the name, container port 3000, add the target group and create.
+13. The Service auto scaling is optional, so select accordingly.
+14. Review the steps and create.
+15. Open the ALB DNS separately, the webpage will open.
